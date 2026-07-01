@@ -1,0 +1,38 @@
+name: "Validate .gaas governance bundle"
+description: >-
+  Validate a .gaas/ governance bundle (auth.md, policy.md, audit.md,
+  escalation.md) against the auth.md convention, spec 0.1. Local-only:
+  no API key, no network calls beyond installing the validator.
+branding:
+  icon: shield
+  color: green
+
+inputs:
+  path:
+    description: "Directory containing the .gaas/ bundle (or the .gaas dir itself)"
+    required: false
+    default: "."
+  gaas-spec-version:
+    description: "gaas-spec version to install (PyPI). Default: latest"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install gaas-spec
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.gaas-spec-version }}" ]; then
+          pip install --quiet "gaas-spec==${{ inputs.gaas-spec-version }}"
+        else
+          pip install --quiet gaas-spec
+        fi
+
+    - name: Validate bundle
+      shell: bash
+      run: gaas validate "${{ inputs.path }}"

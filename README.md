@@ -75,7 +75,13 @@ scale gets blocked and a human decides.
 
 [GaaS](https://gaas.is) (Governance as a Service) is the reference runtime: it validates these files, compiles them into enforced runtime policy, countersigns applied bundles, and anchors the applied-bundle hash in a tamper-evident audit chain. The audit record itself is [free forever](PLEDGE.md).
 
-The reference validator ships as `gaas-spec` on PyPI with a CLI (`gaas validate`, `gaas sign`, `gaas verify`) and a GitHub Action — no API key, no network, validation runs entirely local.
+The reference validator ships as `gaas-spec` on PyPI with a CLI (`gaas validate`, `gaas sign`, `gaas verify`) — no API key, no network, validation runs entirely local. Wire it into CI with one step:
+
+```yaml
+- uses: H2OmAI/authmd/validate@v1
+  # with:
+  #   path: .            # directory containing .gaas/ (default)
+```
 
 ## Status & governance
 
