@@ -29,7 +29,7 @@ The frontmatter is the **machine contract**: it MUST validate against the corres
 
 ```yaml
 gaas_spec: "0.1"     # spec version this file targets (string, exactly "0.1")
-org: acme            # org slug — lowercase, [a-z0-9-], 1–64 chars
+org: acme            # org slug — lowercase, [a-z0-9_-], 1–64 chars
 ```
 
 Implementations MUST reject a file whose `gaas_spec` major.minor they do not implement. Unknown **top-level** frontmatter keys MUST be rejected (strict mode keeps the contract honest); unknown keys nested inside `x_` extensions (§6) are permitted.
