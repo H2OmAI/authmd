@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gaas.to/spec/0.1/auth.schema.json",
+  "title": "auth.md frontmatter \u2014 spec 0.1",
+  "type": "object",
+  "$defs": {
+    "leaf": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "enum": [
+            "agent.id",
+            "agent.trust_tier",
+            "action.type",
+            "action.verb",
+            "action.target.type",
+            "action.target.identifier",
+            "action.target.sensitivity",
+            "action.payload.summary",
+            "action.payload.estimated_impact.reversible",
+            "action.payload.estimated_impact.financial_exposure_usd",
+            "action.payload.estimated_impact.audience_size",
+            "action.payload.estimated_impact.data_categories",
+            "action.payload.estimated_impact.regulatory_domains",
+            "context.session_id",
+            "context.conversation_id",
+            "enrichment.contradiction_count",
+            "enrichment.context_confidence"
+          ]
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "ne",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "in",
+            "not_in",
+            "contains",
+            "matches",
+            "exists"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "maxItems": 64
+            }
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "op",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "matcher": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/leaf"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/matcher"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/matcher"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/matcher"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "properties": {
+    "gaas_spec": {
+      "const": "0.1"
+    },
+    "org": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,64}$"
+    },
+    "agents": {
+      "type": "array",
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string"
+          },
+          "framework": {
+            "type": "string"
+          },
+          "trust_tier": {
+            "enum": [
+              "untrusted",
+              "limited",
+              "standard",
+              "elevated"
+            ]
+          },
+          "delegation_limit_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "allowed_action_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "denied_action_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "requires_human": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "when": {
+            "oneOf": [
+              {
+                "const": "always"
+              },
+              {
+                "$ref": "#/$defs/matcher"
+              }
+            ]
+          }
+        },
+        "required": [
+          "description",
+          "when"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "gaas_spec",
+    "org"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "agents"
+      ]
+    },
+    {
+      "required": [
+        "requires_human"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}

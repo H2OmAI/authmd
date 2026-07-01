@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gaas.to/spec/0.1/fieldpaths-0.1.json",
+  "title": "Whitelisted field paths \u2014 spec 0.1",
+  "description": "The complete set of dotted field paths a leaf matcher may reference.",
+  "enum": [
+    "agent.id",
+    "agent.trust_tier",
+    "action.type",
+    "action.verb",
+    "action.target.type",
+    "action.target.identifier",
+    "action.target.sensitivity",
+    "action.payload.summary",
+    "action.payload.estimated_impact.reversible",
+    "action.payload.estimated_impact.financial_exposure_usd",
+    "action.payload.estimated_impact.audience_size",
+    "action.payload.estimated_impact.data_categories",
+    "action.payload.estimated_impact.regulatory_domains",
+    "context.session_id",
+    "context.conversation_id",
+    "enrichment.contradiction_count",
+    "enrichment.context_confidence"
+  ]
+}

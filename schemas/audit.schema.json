@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gaas.to/spec/0.1/audit.schema.json",
+  "title": "audit.md frontmatter \u2014 spec 0.1",
+  "type": "object",
+  "$defs": {},
+  "properties": {
+    "gaas_spec": {
+      "const": "0.1"
+    },
+    "org": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,64}$"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "every_decision": {
+          "const": true
+        },
+        "include_shadow": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "every_decision"
+      ],
+      "additionalProperties": false
+    },
+    "retention": {
+      "type": "object",
+      "properties": {
+        "minimum_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "export_before_expiry": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "minimum_days"
+      ],
+      "additionalProperties": false
+    },
+    "signing": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "provider_only",
+            "segregated",
+            "cosigned"
+          ]
+        },
+        "org_public_key": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "mode": {
+            "enum": [
+              "segregated",
+              "cosigned"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "mode",
+          "org_public_key"
+        ]
+      }
+    },
+    "export": {
+      "type": "object",
+      "properties": {
+        "cadence": {
+          "enum": [
+            "none",
+            "monthly",
+            "quarterly"
+          ]
+        },
+        "destination_hint": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "cadence"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "gaas_spec",
+    "org",
+    "record"
+  ],
+  "additionalProperties": false
+}

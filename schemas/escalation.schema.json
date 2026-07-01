@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gaas.to/spec/0.1/escalation.schema.json",
+  "title": "escalation.md frontmatter \u2014 spec 0.1",
+  "type": "object",
+  "$defs": {
+    "leaf": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "enum": [
+            "agent.id",
+            "agent.trust_tier",
+            "action.type",
+            "action.verb",
+            "action.target.type",
+            "action.target.identifier",
+            "action.target.sensitivity",
+            "action.payload.summary",
+            "action.payload.estimated_impact.reversible",
+            "action.payload.estimated_impact.financial_exposure_usd",
+            "action.payload.estimated_impact.audience_size",
+            "action.payload.estimated_impact.data_categories",
+            "action.payload.estimated_impact.regulatory_domains",
+            "context.session_id",
+            "context.conversation_id",
+            "enrichment.contradiction_count",
+            "enrichment.context_confidence"
+          ]
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "ne",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "in",
+            "not_in",
+            "contains",
+            "matches",
+            "exists"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "maxItems": 64
+            }
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "op",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "matcher": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/leaf"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/matcher"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/matcher"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/matcher"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "properties": {
+    "gaas_spec": {
+      "const": "0.1"
+    },
+    "org": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,64}$"
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,64}$"
+          },
+          "match": {
+            "$ref": "#/$defs/matcher"
+          },
+          "approvers": {
+            "type": "object",
+            "properties": {
+              "emails": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "minItems": 1,
+                "maxItems": 16
+              }
+            },
+            "required": [
+              "emails"
+            ],
+            "additionalProperties": false
+          },
+          "webhook": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "^https://"
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "timeout_minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 10080
+          },
+          "on_timeout": {
+            "enum": [
+              "block",
+              "escalate_up"
+            ]
+          },
+          "escalate_to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "approvers",
+          "timeout_minutes",
+          "on_timeout"
+        ],
+        "additionalProperties": false,
+        "if": {
+          "properties": {
+            "on_timeout": {
+              "const": "escalate_up"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "id",
+            "approvers",
+            "timeout_minutes",
+            "on_timeout",
+            "escalate_to"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "gaas_spec",
+    "org",
+    "routes"
+  ],
+  "additionalProperties": false
+}

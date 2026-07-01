@@ -1,0 +1,40 @@
+{
+  "valid/full-bundle": {
+    "valid": true
+  },
+  "valid/policy-only": {
+    "valid": true
+  },
+  "valid/when-always": {
+    "valid": true
+  },
+  "invalid/unknown-top-key": {
+    "valid": false,
+    "reason": "unknown-frontmatter-key"
+  },
+  "invalid/bad-op": {
+    "valid": false,
+    "reason": "unknown-operator"
+  },
+  "invalid/bad-field-path": {
+    "valid": false,
+    "reason": "field-path-not-whitelisted"
+  },
+  "invalid/timeout-approve": {
+    "valid": false,
+    "reason": "unsafe-timeout-action"
+  },
+  "invalid/missing-default-route": {
+    "valid": false,
+    "reason": "missing-default-route",
+    "note": "semantic check beyond JSON Schema \u2014 validators MUST implement it"
+  },
+  "invalid/record-partial": {
+    "valid": false,
+    "reason": "partial-recording-forbidden"
+  },
+  "invalid/wrong-spec-version": {
+    "valid": false,
+    "reason": "unsupported-spec-version"
+  }
+}

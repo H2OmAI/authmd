@@ -1,0 +1,27 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema pyyaml
+      - name: Schemas are valid JSON Schema
+        run: |
+          python - <<'EOF'
+          import json, pathlib
+          from jsonschema import Draft202012Validator
+          for p in pathlib.Path("schemas").glob("*.json"):
+              Draft202012Validator.check_schema(json.loads(p.read_text()))
+              print("ok", p.name)
+          EOF
+      - name: Fixtures behave as declared
+        run: python scripts/check_fixtures.py
