@@ -2,7 +2,7 @@
 
 **An open convention for declaring how an AI agent is governed: in files, in your repo, readable by people and enforced by machines.**
 
-Spec version: **0.1-draft** · Status: **public draft, comments welcome** · License: [CC BY 4.0](LICENSE) (text), [Apache-2.0](LICENSE-CODE) (schemas & fixtures)
+Spec version: **0.1** · Status: **final** (per [GOVERNANCE.md](GOVERNANCE.md): the reference implementation passes every conformance fixture, and independent consumers exist — the [`gaas-spec`](https://pypi.org/project/gaas-spec/) CLI and the [validate CI Action](validate/action.yml)) · License: [CC BY 4.0](LICENSE) (text), [Apache-2.0](LICENSE-CODE) (schemas & fixtures)
 
 ---
 

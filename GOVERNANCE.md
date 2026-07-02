@@ -2,7 +2,7 @@
 
 ## Status
 
-Spec **0.1-draft**, published for public comment. The reference runtime ([GaaS](https://gaas.is)) tracks the draft; 0.1 final is declared when the reference implementation passes all conformance fixtures and at least one non-reference consumer exists (the standalone CLI counts).
+Spec **0.1 — final** (declared 2 July 2026, tag `v0.1.0`). The declaration criteria were: the reference implementation ([`gaas-spec`](https://pypi.org/project/gaas-spec/) 0.1.0) passes every conformance fixture, and at least one non-reference consumer exists (the standalone CLI and the [validate CI Action](validate/action.yml)). The reference runtime is [GaaS](https://gaas.is). Changes from here follow the process below; 0.1 documents remain valid for all of 0.x per the versioning rules.
 
 ## Change process
 
